@@ -1,0 +1,32 @@
+{
+  "metodo": "Newton (Newton-CG da SciPy)",
+  "x_otimo": [
+    0.030769230769230774,
+    0.05384615384615385
+  ],
+  "f_otimo": -2.6923076923076925,
+  "iteracoes": 2,
+  "avaliacoes_funcao": 2,
+  "avaliacoes_gradiente": 2,
+  "sucesso": true,
+  "mensagem": "Optimization terminated successfully.",
+  "historico_f": [
+    0.0,
+    -2.6923076923076925,
+    -2.6923076923076925
+  ],
+  "x_inicial": [
+    0.0,
+    0.0
+  ],
+  "x_analitico": [
+    0.030769230769230774,
+    0.053846153846153856
+  ],
+  "erro_analitico": 6.938893903907228e-18,
+  "norma_gradiente": 1.702804564018834e-14,
+  "autovalores_hessiana": [
+    1234.4355629253625,
+    5265.564437074638
+  ]
+}
