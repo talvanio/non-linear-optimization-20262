@@ -19,8 +19,8 @@
 \title{{\footnotesize Universidade Federal de Minas Gerais\\Escola de Engenharia\\ELE077 Otimização Não Linear\\} \vspace{5mm} Trabalho Computacional I}
 
 % Autores do trabalho
-\author{Nome Completo 1 \and Nome Completo 2}
-\date{\today}
+\author{Luisa Marques Laboissiere \and Talvani de Souza Barbosa}
+\date{4 de novembro de 2026}
 
 \begin{document}
 
@@ -81,6 +81,7 @@ Como $R$ só depende da direção de $\mathbf{x}$, é possível visualizar a fun
   \item A dimensão é pequena ($n=3$), de modo que o custo de armazenar e atualizar a matriz $3\times3$ do BFGS é desprezível.
 \end{itemize}
 
+\newpage
 \subsection{Resultados}
 
 Utilizou-se \texttt{method='BFGS'} com o gradiente analítico, ponto inicial $\mathbf{x}_0=(1,1,1)$ e tolerância \texttt{gtol}$=10^{-10}$. A Tabela~\ref{tab:q1} resume os resultados.
@@ -151,10 +152,10 @@ com $x\in\R^{n}$ a imagem $32\times32$ achatada, ou seja, $n=1024$ variáveis. N
 \subsection{Escolha do método: Gradientes Conjugados não lineares}
 
 \begin{itemize}
+  \item Os \textbf{Gradientes Conjugados} usam apenas o gradiente e memória $O(n)$, e, ao construir direções conjugadas, evitam o ziguezague do gradiente descendente em problemas mal condicionados. Como a função é convexa e o gradiente analítico é barato (duas convoluções e operações elemento a elemento), o CG é a escolha mais adequada entre os métodos estudados.
   \item O \textbf{método de Newton} exigiria formar e fatorar a Hessiana $1024\times1024$ a cada iteração, o que é caro e desnecessário.
   \item O \textbf{BFGS} armazena uma matriz densa $n\times n$ (cerca de $10^6$ entradas) com custo $O(n^2)$ por iteração. É viável, mas pesado, e a dica do enunciado (começar com poucas iterações) indica que o custo computacional é relevante.
-  \item O \textbf{Nelder--Mead} é inviável: o simplex teria 1025 vértices e o número de avaliações seria proibitivo.
-  \item Os \textbf{Gradientes Conjugados} usam apenas o gradiente e memória $O(n)$, e, ao construir direções conjugadas, evitam o ziguezague do gradiente descendente em problemas mal condicionados. Como a função é convexa e o gradiente analítico é barato (duas convoluções e operações elemento a elemento), o CG é a escolha mais adequada entre os métodos estudados.
+  \item O \textbf{Nelder--Mead} é inviável porque o simplex teria 1025 vértices e o número de avaliações seria proibitivo.
 \end{itemize}
 
 \subsection{Resultados}
@@ -198,9 +199,9 @@ $\|\nabla f(x_{\mathrm{final}})\|$ & \multicolumn{2}{c}{$4{,}9\times10^{-2}$} \\
 
 O CG reduziu a função-objetivo em cerca de 55\% ($8{,}65 \to 3{,}86$). A maior parte da redução veio do termo de fidelidade ($6{,}45\to1{,}74$): ao contrário de $b$, que é a imagem borrada, a reconstrução $x$ é tal que $Ax$ (a reconstrução borrada) se aproxima de $b$. O termo TV também diminuiu levemente ($110{,}0\to105{,}9$), refletindo a remoção do ruído nas regiões de fundo.
 
-Visualmente (Figura~\ref{fig:q2img}), a reconstrução é muito mais nítida que a imagem degradada: a letra ``A'' tem bordas bem definidas, o fundo ficou praticamente uniforme e a abertura interna da letra é claramente visível. Esse é o comportamento esperado da regularização por variação total, que favorece imagens constantes por partes e preserva bordas. Como o script não dispõe da imagem original nítida para comparação, a qualidade foi avaliada apenas visualmente e pelo valor da função-objetivo.
+Visualmente (Figura~\ref{fig:q2img}), a reconstrução é muito mais nítida que a imagem degradada: a letra ``A'' tem bordas bem definidas, o fundo ficou praticamente uniforme e a abertura interna da letra é claramente visível. Esse é o comportamento esperado da regularização por variação total, que favorece imagens constantes por partes e preserva bordas.
 
-Quanto à convergência (Figura~\ref{fig:q2conv}), a função cai rapidamente nas primeiras iterações ($f=4{,}12$ após 10 iterações e $3{,}93$ após 100) e depois decresce muito lentamente: entre as iterações 100 e 1000 a redução é de menos de 2\%. O algoritmo parou pelo limite de 1000 iterações, sem atingir a tolerância de gradiente ($\|\nabla f\|\approx0{,}049 > 10^{-5}$); ou seja, o ótimo não foi atingido com alta precisão. Esse comportamento é coerente com o mau condicionamento causado pelo $\epsilon$ pequeno na TV: o CG avança rapidamente nas direções bem condicionadas e lentamente nas demais. Do ponto de vista prático, porém, a imagem já é satisfatória muito antes do limite, o que está de acordo com a dica do enunciado de começar com poucas iterações.
+Quanto à convergência (Figura~\ref{fig:q2conv}), a função cai rapidamente nas primeiras iterações ($f=4{,}12$ após 10 iterações e $3{,}93$ após 100) e depois decresce muito lentamente: entre as iterações 100 e 1000 a redução é de menos de 2\%. O algoritmo parou pelo limite de 1000 iterações, sem atingir a tolerância de gradiente ($\|\nabla f\|\approx0{,}049 > 10^{-5}$); ou seja, o ótimo não foi atingido com alta precisão. Esse comportamento é coerente com o mau condicionamento causado pelo $\epsilon$ pequeno na TV: o CG avança rapidamente nas direções bem condicionadas e lentamente nas demais.
 
 Por fim, como o problema é irrestrito, não se impôs que os pixels ficassem em $[0,1]$: a reconstrução tem valores entre $-0{,}031$ e $1{,}028$ (36 pixels abaixo de 0 e 68 acima de 1). As violações são pequenas e a figura usa a escala visual $[0,1]$.
 
@@ -218,7 +219,7 @@ com $R_{\mathrm{alvo}}=10000$ e os parâmetros da Tabela~1 do enunciado. Suas ca
 \begin{itemize}
   \item \textbf{Dimensão.} Apenas 2 variáveis, restritas a valores positivos.
   \item \textbf{Não diferenciabilidade.} O valor absoluto não é diferenciável onde o desvio de um cenário se anula, e o máximo não é diferenciável onde dois cenários empatam como pior caso. A função é contínua mas apresenta ``quinas''. Em problemas minimax, o ótimo tipicamente fica \emph{exatamente} em uma dessas quinas, pois a solução equilibra os piores desvios.
-  \item \textbf{Convexidade.} Com a troca $u=1/p_1$, $v=1/p_2$, cada receita é linear em $(u,v)$ e $F$ torna-se o máximo de valores absolutos de funções afins, ou seja, uma função convexa e linear por partes em $(u,v)$. Como essa troca é uma bijeção contínua do quadrante positivo, todo mínimo local de $F$ em $(p_1,p_2)$ é global, embora $F$ não seja convexa nas variáveis originais.
+  \item \textbf{Convexidade.} Com a troca $u=1/p_1$, $v=1/p_2$, cada receita é linear em $(u,v)$ e $F$ torna-se o máximo de valores absolutos de funções afins, ou seja, uma função convexa e linear por partes em $(u,v)$. Como cada preço corresponde a um único par $(u,v)$ e vice-versa, um mínimo local nos preços também é mínimo local em $(u,v)$ e, pela convexidade, é global. Assim, $F$ não tem mínimos locais ``falsos'', mesmo não sendo convexa nos preços.
   \item \textbf{Estrutura dos cenários.} Os cenários 1, 2 e 3 são proporcionais: os cenários 2 e 3 valem $0{,}7$ e $1{,}3$ vezes o cenário 1. Definindo $s = 100000/p_1 + 80000/p_2$, tem-se $R_1=s$, $R_2=0{,}7s$ e $R_3=1{,}3s$. Se $s\ge R_{\mathrm{alvo}}$, então $|R_3-R_{\mathrm{alvo}}|\ge 0{,}3R_{\mathrm{alvo}}$; se $s\le R_{\mathrm{alvo}}$, então $|R_2-R_{\mathrm{alvo}}|\ge 0{,}3R_{\mathrm{alvo}}$. Logo $F\ge 3000$ em todo o domínio, com igualdade quando $s=R_{\mathrm{alvo}}$ e o cenário 4 não excede esse desvio. Sobre a curva $s=R_{\mathrm{alvo}}$ verifica-se que $R_4\in(9000,\,11250)$, de modo que o cenário 4 nunca é o pior. Assim, \textbf{o valor ótimo é 3000 e o conjunto de ótimos é a curva}
   \begin{equation}
   \frac{100000}{p_1}+\frac{80000}{p_2} = 10000, \qquad p_1>10,\ p_2>8,
