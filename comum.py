@@ -36,3 +36,37 @@ def curva(nome, valores):
     fig.tight_layout()
     fig.savefig(OUT/nome/'convergencia.png', dpi=170)
     plt.close(fig)
+
+def curvas_nivel(nome, func, xlim, ylim, n=200, niveis=30, trajetoria=None, pontos=None,
+                 sobrepor=None, rotulos=('x1', 'x2'), titulo=None, arquivo='curvas_nivel.png'):
+    """Curvas de nível de func(a, b) -> float na janela xlim x ylim.
+
+    trajetoria: sequência (k, 2) de iterados do otimizador.
+    pontos: {rótulo: (x, y, estilo_matplotlib)} para marcar ótimos/pontos estacionários.
+    sobrepor: callback f(ax) para desenhos específicos de cada questão.
+    niveis: número de níveis ou lista explícita de níveis.
+    """
+    import matplotlib
+    matplotlib.use('Agg')
+    import matplotlib.pyplot as plt
+    xs = np.linspace(*xlim, n)
+    ys = np.linspace(*ylim, n)
+    Z = np.array([[func(a, b) for a in xs] for b in ys])
+    fig, ax = plt.subplots(figsize=(6.5, 5.5))
+    cf = ax.contourf(xs, ys, Z, levels=niveis, cmap='viridis', extend='max')
+    ax.contour(xs, ys, Z, levels=cf.levels, colors='k', linewidths=0.3, alpha=0.5)
+    fig.colorbar(cf, ax=ax, label='Função objetivo')
+    if sobrepor is not None:
+        sobrepor(ax)
+    if trajetoria is not None and len(trajetoria) > 0:
+        t = np.asarray(trajetoria)
+        ax.plot(t[:, 0], t[:, 1], '-o', color='white', markersize=3, linewidth=1, label='Trajetória')
+        ax.plot(t[0, 0], t[0, 1], 's', color='orange', markersize=8, label='Ponto inicial')
+    for rotulo, (px, py, estilo) in (pontos or {}).items():
+        ax.plot(px, py, estilo, markersize=12, markeredgecolor='k', label=rotulo)
+    ax.set(xlim=xlim, ylim=ylim, xlabel=rotulos[0], ylabel=rotulos[1], title=titulo or 'Curvas de nível — '+nome)
+    ax.legend(loc='best', fontsize=8)
+    fig.tight_layout()
+    (OUT/nome).mkdir(exist_ok=True)
+    fig.savefig(OUT/nome/arquivo, dpi=170)
+    plt.close(fig)
